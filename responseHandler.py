@@ -3,7 +3,7 @@ import datetime ,requests, json
 def process_response(message):
     message = message.lower()
     greetings = ['hey','hello','hi','hallo']
-    if(message in grettings):
+    if(message in greetings):
         response = summary()
     else:
         #default message
