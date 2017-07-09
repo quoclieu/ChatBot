@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 import requests
+import responseHandler
 
 app = Flask(__name__)
 
@@ -25,7 +26,10 @@ def handle_messages():
   print(payload)
   for sender, message in messaging_events(payload):
     print("Incoming from %s: %s" % (sender, message))
-    send_message(PAT, sender, message)
+
+    response=responseHandler.process_response(message)
+
+    send_message(PAT, sender, response)
   return("ok")
 
 def messaging_events(payload):
