@@ -27,7 +27,7 @@ def handle_messages():
   for sender, message in messaging_events(payload):
     print("Incoming from %s: %s" % (sender, message))
 
-    response="ok"#responseHandler.process_response(message)
+    response=responseHandler.process_response(message)
 
     send_message(PAT, sender, response)
   return("ok")
