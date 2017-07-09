@@ -29,11 +29,11 @@ def summary():
 
 
     summary = "Summary for today:"+today.strftime("%a %d %b")
-summary = '''
-Weather
-Temperature: %d (%s) Max: %d Min: %d
+    summary = '''
+    Weather
+    Temperature: %d (%s) Max: %d Min: %d
 
-''' % (w_curr,w_desc,w_max,w_min)
+    ''' % (w_curr,w_desc,w_max,w_min)
 
 
     return summary
