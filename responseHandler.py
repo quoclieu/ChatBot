@@ -75,7 +75,7 @@ Min: %d
     #    summary += article["url"] +'\n'
 
     #Upcoming trains
-    #summary+="<a href='google.com'>google</a>"
+    summary+="<a href='google.com'>google</a>"
     return summary
 
 #print(process_response("hi"))
