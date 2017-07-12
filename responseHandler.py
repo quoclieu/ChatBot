@@ -7,11 +7,8 @@ def process_response(message):
     greetings = ['hey','hello','hi','hallo']
     if(message in greetings):
         response = summary()
-
-    if(message == "tech news"):
+    elif(message == "tech news"):
         response = getNews("techNews")
-
-
     else:
         #default message
         response = 'Hi there! Please send a greeting for a quick summary'
@@ -81,4 +78,4 @@ Min: %d
     #summary+="<a href='google.com'>google</a>"
     return summary
 
-print(summary())
+print(process_response("hi"))
