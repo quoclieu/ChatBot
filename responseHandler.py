@@ -73,8 +73,8 @@ Min: %d
     abc_news = getNews("abc-news-au")
     i = 0
     for article in abc_news:
-        summary += article["url"]
-        i++
+        summary += article["url"] +'\n'
+        i+=1
         if i > 4:
             break
 
@@ -83,4 +83,4 @@ Min: %d
 
     return summary
 
-#print(process_response("hi"))
+print(process_response("hi"))
