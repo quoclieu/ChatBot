@@ -29,6 +29,7 @@ def handle_messages():
 
     response=responseHandler.process_response(message)
 
+    send_message(PAT, sender, message)
     send_message(PAT, sender, response)
   return("ok")
 

@@ -13,6 +13,8 @@ def process_response(message):
         #default message
         response = 'Hi there! Please send a greeting for a quick summary'
 
+    if(len(response)>640):
+        response = "message too long " + str(len(response))
     return response
 
 def getWeather():
@@ -71,12 +73,10 @@ Min: %d
     #Summary for news
     tech_news = getNews("techcrunch")
     abc_news = getNews("abc-news-au")
-    i = 0
+
     for article in abc_news:
         summary += article["url"] +'\n'
-        i+=1
-        if i > 4:
-            break
+
 
     #Upcoming trains
 
