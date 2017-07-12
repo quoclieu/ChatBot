@@ -3,12 +3,19 @@ import datetime ,requests, json
 
 def process_response(message):
     message = message.lower()
+
     greetings = ['hey','hello','hi','hallo']
     if(message in greetings):
         response = summary()
+
+    if(message == "tech news"):
+        response = getNews("techNews")
+
+
     else:
         #default message
         response = 'Hi there! Please send a greeting for a quick summary'
+
     return response
 
 def getWeather():
@@ -71,7 +78,7 @@ Min: %d
         summary += article["url"] +'\n'
 
     #Upcoming trains
-    summary+="<a href='google.com'>google</a>"
+    #summary+="<a href='google.com'>google</a>"
     return summary
 
 print(summary())
