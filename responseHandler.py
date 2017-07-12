@@ -71,8 +71,12 @@ Min: %d
     #Summary for news
     tech_news = getNews("techcrunch")
     abc_news = getNews("abc-news-au")
+    i = 0
     for article in abc_news:
         summary += article["url"]
+        i++
+        if i > 4:
+            break
 
     #Upcoming trains
 
