@@ -30,14 +30,21 @@ def handle_messages():
     #send_message(PAT, sender, message)
 
     print("Incoming from %s: %s" % (sender, message))
-    response = {}
+
     response = responseHandler.process_response(message)
-    for key in response:
-        if(len(response[key])>640):
-            print("Error: Msg was too long")
+
+
+    for msg in response:
+        if(len(msg)>640):
+            send_message(PAT, sender, 'msg too long')
             continue
-        print response[key]
-        send_message(PAT, sender, response[key])
+        #Checks if this section of the list is holding a list of urls
+        if(isinstance(msg,list)):
+            for url in msg:
+                send_message(PAT, sender, url)
+            continue
+        send_message(PAT, sender, msg)
+
   return("ok")
 
 def messaging_events(payload):

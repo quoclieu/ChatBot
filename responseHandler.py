@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import datetime ,requests, json
+from collections import OrderedDict
 
 def process_response(message):
     message = message.lower()
-    response = {}
+    response = []
 
     greetings = ['hey','hello','hi','hallo']
     if(message in greetings):
@@ -12,7 +13,7 @@ def process_response(message):
         response = getNews("techNews")
     else:
         #default message
-        response = {'error':'Hi there! Please send a greeting for a quick summary'}
+        response = ['Hi there! Please send a greeting for a quick summary']
 
     return response
 
@@ -50,11 +51,11 @@ def getNews(source):
 
 #Returns a dictionary with a summary of date, PTV, Weather and news
 def summary():
-    summary = {}
+    summary = []
 
     #Date
     today = datetime.datetime.now()
-    summary["date"]="Summary for today: "+today.strftime("%a %d %b")
+    summary.append("Summary for today: "+today.strftime("%a %d %b"))
 
 
     #Summary for weather
@@ -64,21 +65,21 @@ def summary():
     w_min = weather["main"]["temp_min"]
     w_curr = weather["main"]["temp"]
     w_desc = weather["weather"][0]["description"]
-    summary["weather"]='''
+    summary.append('''
 Weather
 Temperature: %d (%s)
 Max: %d
 Min: %d
-''' % (w_curr,w_desc,w_max,w_min)
+''' % (w_curr,w_desc,w_max,w_min))
 
 
     #Summary for news
     tech_news = getNews("techcrunch")
     abc_news = getNews("abc-news-au")
 
-    summary["news"]=''
+    summary.append([])
     for article in abc_news:
-        summary["news"] += article["url"] +'\n'
+        summary[2].append(article["url"])
 
 
     #Upcoming trains
@@ -86,10 +87,15 @@ Min: %d
 
     return summary
 
-# print(process_response("hi"))
+
 # response=process_response("hi")
-# for key in response:
-#     if(len(response[key])>640):
-#         print("Error: Msg was too long")
+# for msg in response:
+#     if(len(msg)>640):
+#         print("Msg too long")
 #         continue
-#     print response[key]
+#     #Checks if this section of the list is holding a list of urls
+#     if(isinstance(msg,list)):
+#         for url in msg:
+#             print url
+#         continue
+#     print(msg)
