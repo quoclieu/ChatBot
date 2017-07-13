@@ -27,17 +27,17 @@ def handle_messages():
   for sender, message in messaging_events(payload):
 
     #Used this to flush messages
-    send_message(PAT, sender, message)
+    #send_message(PAT, sender, message)
 
-    # print("Incoming from %s: %s" % (sender, message))
-    # response = {}
-    # response = responseHandler.process_response(message)
-    # for key in response:
-    #     if(len(response[key])>640):
-    #         print("Error: Msg was too long")
-    #         continue
-    #     print response[key]
-    #     send_message(PAT, sender, response[key])
+    print("Incoming from %s: %s" % (sender, message))
+    response = {}
+    response = responseHandler.process_response(message)
+    for key in response:
+        if(len(response[key])>640):
+            print("Error: Msg was too long")
+            continue
+        print response[key]
+        send_message(PAT, sender, response[key])
   return("ok")
 
 def messaging_events(payload):

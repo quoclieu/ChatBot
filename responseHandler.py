@@ -12,10 +12,8 @@ def process_response(message):
         response = getNews("techNews")
     else:
         #default message
-        response = 'Hi there! Please send a greeting for a quick summary'
+        response = {'error':'Hi there! Please send a greeting for a quick summary'}
 
-    if(len(response)>640):
-        response = "message too long " + str(len(response))
     return response
 
 def getWeather():
