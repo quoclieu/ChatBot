@@ -31,19 +31,21 @@ def handle_messages():
 
     print("Incoming from %s: %s" % (sender, message))
 
+    #Reads the message and generates an appropriate response
     response = responseHandler.process_response(message)
 
-
-    for msg in response:
-        if(len(msg)>640):
-            send_message(PAT, sender, 'msg too long')
+    for item in response:
+        #Length of message is limited to 640
+        if(len(item)>640):
+            send_message(PAT, sender, 'Error: response was too long! Oops!')
             continue
-        #Checks if this section of the list is holding a list of urls
-        if(isinstance(msg,list)):
-            for url in msg:
+
+        #Checks if this section of the list is holding a list of urls for news
+        if(isinstance(item,list)):
+            for url in item:
                 send_message(PAT, sender, url)
             continue
-        send_message(PAT, sender, msg)
+        send_message(PAT, sender, item)
 
   return("ok")
 
