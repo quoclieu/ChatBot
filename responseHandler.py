@@ -3,6 +3,7 @@ import datetime ,requests, json
 
 def process_response(message):
     message = message.lower()
+    response = {}
 
     greetings = ['hey','hello','hi','hallo']
     if(message in greetings):
@@ -87,4 +88,10 @@ Min: %d
 
     return summary
 
-print(process_response("hi"))
+# print(process_response("hi"))
+# response=process_response("hi")
+# for key in response:
+#     if(len(response[key])>640):
+#         print("Error: Msg was too long")
+#         continue
+#     print response[key]
