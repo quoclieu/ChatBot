@@ -28,8 +28,12 @@ def handle_messages():
     print("Incoming from %s: %s" % (sender, message))
     response = {}
     response = responseHandler.process_response(message)
-    a = response["weather"]
-    send_message(PAT, sender, a)
+    for key in response:
+        if(len(response[key])>640):
+            print("Error: Msg was too long")
+            continue
+        print response[key]
+        send_message(PAT, sender, response[key])
   return("ok")
 
 def messaging_events(payload):
