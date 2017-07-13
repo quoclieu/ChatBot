@@ -29,7 +29,7 @@ def handle_messages():
 
     response=responseHandler.process_response(message)
     for key in response:
-        if(len(key[response])>640):
+        if(len(response[key])>640):
             send_message(PAT, sender, "Error: Msg was too long")
             continue
         send_message(PAT, sender, response[key])
