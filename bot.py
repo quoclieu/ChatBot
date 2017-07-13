@@ -28,8 +28,8 @@ def handle_messages():
     print("Incoming from %s: %s" % (sender, message))
     response = {}
     response = responseHandler.process_response(message)
-
-    send_message(PAT, sender, response["weather"])
+    a = response["weather"]
+    send_message(PAT, sender, a)
   return("ok")
 
 def messaging_events(payload):
