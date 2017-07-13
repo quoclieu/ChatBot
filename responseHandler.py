@@ -49,10 +49,13 @@ def getNews(source):
 
 
 
-#Prints a summary of date, PTV, Weather and news
+#Returns a dictionary with a summary of date, PTV, Weather and news
 def summary():
-    today = datetime.datetime.now() #date
-    summary = "Summary for today: "+today.strftime("%a %d %b")
+    summary = {}
+
+    #Date
+    today = datetime.datetime.now()
+    summary["date"]="Summary for today: "+today.strftime("%a %d %b")
 
 
     #Summary for weather
@@ -62,7 +65,7 @@ def summary():
     w_min = weather["main"]["temp_min"]
     w_curr = weather["main"]["temp"]
     w_desc = weather["weather"][0]["description"]
-    summary +='''
+    summary["weather"]='''
 Weather
 Temperature: %d (%s)
 Max: %d
@@ -74,8 +77,9 @@ Min: %d
     tech_news = getNews("techcrunch")
     abc_news = getNews("abc-news-au")
 
+    summary["news"]=''
     for article in abc_news:
-        summary += article["url"] +'\n'
+        summary["news"] += article["url"] +'\n'
 
 
     #Upcoming trains
