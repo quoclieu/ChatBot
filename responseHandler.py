@@ -20,19 +20,27 @@ def process_response(message):
             response = newsURLs(getNews("abc-news-au"))
         elif(message in "weather"):
             response = weatherTodayStr(getWeather())
-        elif(message in "forecast"):
-            response = weatherTodayStr(getWeather())
+        # elif(message in "forecast"):
+        #     response = weatherTodayStr(getWeather())
         elif("trains" in message):
             route_id = 7 #for Glen Waverley line
             direction_id = 7#Heading towards Glen Waverley
+            num_departs = 5 #number of departure times
+            if("more" in message):
+                num_departs = 20
             if("mc" in message):
                 stop_id = 1120 #Melbourne Central
+                station = "Melbourne Central"
             elif("flinder" in message):
                 stop_id = 1071 #Flinders
+                station = "Flinders"
+
             else:
                 stop_id = 1137 #For mount waverley
                 direction_id = 1#for heading to city
-            response = getDepartures(stop_id,direction_id)
+                station = "Mount Waverley"
+            response = getDepartures(stop_id,direction_id,num_departs)
+            response.insert(0,"Glen Waverley Line. Departing: %s" % station)
     return response
 
 def getWeather():
@@ -95,7 +103,7 @@ def melbourneTime(isostr):
   return d.astimezone(tz.gettz('Australia/Melbourne'))
 
  #Returns timetable of trains departing from the specified stop id
-def getDepartures(stop_id, dir_id):
+def getDepartures(stop_id, dir_id,num_departs):
     from datetime import datetime
     #Convert current time to utc iso 1806 for comparing with api timetable
     now = datetime.now().utcnow().isoformat()
@@ -111,7 +119,7 @@ def getDepartures(stop_id, dir_id):
         departTime = d["scheduled_departure_utc"]
         if(now<parser.parse(departTime).isoformat()):
             departs.append(str(melbourneTime(departTime))[0:16])
-            if(i>10):
+            if(i>num_departs):
                 break
             i+=1
     return departs
@@ -149,8 +157,8 @@ def summary():
 
 
     return summary
-response=process_response("trains")
-print(response)
+# response=process_response("trains")
+# print(response)
 #
 # response=process_response("hi")
 # for msg in response:
