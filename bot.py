@@ -37,7 +37,7 @@ def handle_messages():
     for item in response:
         #Length of message is limited to 640
         if(len(item)>640):
-            send_message(PAT, sender, 'Error: response was too long! Oops!')
+            send_message(PAT, sender, 'Error: response was too long! Oops!:(')
             continue
 
         #Checks if this section of the list is holding a list of urls for news

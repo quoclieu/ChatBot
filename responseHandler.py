@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime ,requests, json
 from collections import OrderedDict
+import random
 
 #Reads the message and returns a list containing the appropriate response
 def process_response(message):
@@ -8,22 +9,51 @@ def process_response(message):
     response = []
 
     greetings = ['hey','hello','hi','hallo']
+
+    response = random.choice(['Haha!','Nice!',"I don't understand!"])
     if(message in greetings):
         response = summary()
-    elif(message == "tech news"):
-        response = newsURLs(getNews("techcrunch"))
-    elif(message == "abc news"):
-        response = newsURLs(getNews("abc-news-au"))
-    else:
-        #default message
-        response = ['Hi there! Please send a greeting for a quick summary']
-
+    elif(len(message)>2):
+        if(message in "tech news"):
+            response = newsURLs(getNews("techcrunch"))
+        elif(message in "abc news"):
+            response = newsURLs(getNews("abc-news-au"))
+        elif(message in "weather"):
+            response = weatherTodayStr(getWeather())
+        elif(message in "forecast"):
+            response = weatherTodayStr(getWeather())
+        elif("trains" in message):
+            route_id = 7 #for Glen Waverley line
+            direction_id = 7#Heading towards Glen Waverley
+            if("mc" in message):
+                stop_id = 1120 #Melbourne Central
+            elif("flinder" in message):
+                stop_id = 1071 #Flinders
+            else:
+                stop_id = 1137 #For mount waverley
+                direction_id = 1#for heading to city
+            response = getDepartures(stop_id,direction_id)
     return response
 
 def getWeather():
     weatherapi_key = '3f014abc78d36de57476f92891bb6360'
     weather = requests.get("http://api.openweathermap.org/data/2.5/weather?zip=3151,au&units=metric&appid="+weatherapi_key)
     weather = json.loads(weather.content)
+    return weather
+
+#Returns string of the weather for today
+def weatherTodayStr(weather):
+
+    w_max = weather["main"]["temp_max"]
+    w_min = weather["main"]["temp_min"]
+    w_curr = weather["main"]["temp"]
+    w_desc = weather["weather"][0]["description"]
+    weather = ('''
+Weather
+Temperature: %d (%s)
+Max: %d
+Min: %d
+''' % (w_curr,w_desc,w_max,w_min))
     return weather
 
 def getNews(source):
@@ -42,6 +72,7 @@ def newsURLs(news):
     return urls
 
 
+## PTV
 from hashlib import sha1
 import hmac
 import binascii
@@ -55,8 +86,32 @@ def getUrl(request):
     signature = hashed.hexdigest()
     return 'http://timetableapi.ptv.vic.gov.au'+raw+'&signature={1}'.format(devId, signature)
 
-def getTrains():
-    return 1
+
+from dateutil import parser, tz
+#Converts UTC time to AEST
+def melbourneTime(isostr):
+  d = parser.parse(isostr)
+  d.replace(tzinfo=tz.gettz('UTC')) # Not sure if needed
+  return d.astimezone(tz.gettz('Australia/Melbourne'))
+
+ #Returns timetable of trains departing from the specified stop id
+def getDepartures(stop_id, dir_id):
+    from datetime import datetime
+    #Convert current time to utc iso 1806 for comparing with api timetable
+    now = datetime.now().utcnow().isoformat()
+
+    departs=[]
+
+    request = '/v3/departures/route_type/0/stop/%d?direction_id=%d' % (stop_id,dir_id)
+
+    r = requests.get(getUrl(request))
+    r = json.loads(r.content)
+
+    for d in r["departures"]:
+        departTime = d["scheduled_departure_utc"]
+        if(now<parser.parse(departTime).isoformat()):
+            departs.append(str(melbourneTime(departTime))[0:16])
+    return departs
 
 
 
@@ -71,18 +126,7 @@ def summary():
 
     #Summary for weather
     weather = getWeather()
-
-    w_max = weather["main"]["temp_max"]
-    w_min = weather["main"]["temp_min"]
-    w_curr = weather["main"]["temp"]
-    w_desc = weather["weather"][0]["description"]
-    summary.append('''
-Weather
-Temperature: %d (%s)
-Max: %d
-Min: %d
-''' % (w_curr,w_desc,w_max,w_min))
-
+    summary.append(weatherTodayStr(weather))
 
     #Summary for news
     abc_news = getNews("abc-news-au")["articles"]
@@ -102,16 +146,17 @@ Min: %d
 
 
     return summary
-
-
-response=process_response("tech news")
-for msg in response:
-    if(len(msg)>640):
-        print("Msg too long")
-        continue
-    #Checks if this section of the list is holding a list of urls
-    if(isinstance(msg,list)):
-        for url in msg:
-            print url
-        continue
-    print(msg)
+response=process_response("trains")
+print(response)
+#
+# response=process_response("hi")
+# for msg in response:
+#     if(len(msg)>640):
+#         print("Msg too long")
+#         continue
+#     #Checks if this section of the list is holding a list of urls
+#     if(isinstance(msg,list)):
+#         for url in msg:
+#             print url
+#         continue
+#     print(msg)
