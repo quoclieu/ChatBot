@@ -10,7 +10,7 @@ def process_response(message):
 
     greetings = ['hey','hello','hi','hallo']
 
-    response = random.choice(['Haha!','Nice!',"I don't understand!"])
+    response = random.choice([['Haha!'],['Nice!'],["I don't understand!"]])
     if(message in greetings):
         response = summary()
     elif(len(message)>2):
@@ -106,11 +106,14 @@ def getDepartures(stop_id, dir_id):
 
     r = requests.get(getUrl(request))
     r = json.loads(r.content)
-
+    i = 0
     for d in r["departures"]:
         departTime = d["scheduled_departure_utc"]
         if(now<parser.parse(departTime).isoformat()):
             departs.append(str(melbourneTime(departTime))[0:16])
+            if(i>10):
+                break
+            i+=1
     return departs
 
 
